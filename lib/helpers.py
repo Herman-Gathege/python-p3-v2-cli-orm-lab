@@ -68,28 +68,128 @@ def delete_department():
 # You'll implement the employee functions in the lab
 
 def list_employees():
-    pass
+        try:
+            employees = Employee.query.all()  # Replace with the appropriate ORM call to get all employees
+            for employee in employees:
+                print(employee)
+        except Exception as e:
+            print(f"Error retrieving employees: {e}")
+
 
 
 def find_employee_by_name():
-    pass
+    name = input("Enter the employee's name: ")
+    try:
+        employee = Employee.query.filter_by(name=name).first()  # Replace with the ORM call to find an employee by name
+        if employee:
+            print(employee)
+        else:
+            print(f"Employee {name} not found")
+    except Exception as e:
+        print(f"Error finding employee by name: {e}")
+
 
 
 def find_employee_by_id():
-    pass
+    try:
+        employee_id = int(input("Enter the employee's id: "))
+        employee = Employee.query.get(employee_id)  # Replace with the ORM call to find an employee by ID
+        if employee:
+            print(employee)
+        else:
+            print(f"Employee {employee_id} not found")
+    except ValueError:
+        print("Invalid ID format")
+    except Exception as e:
+        print(f"Error finding employee by id: {e}")
 
 
 def create_employee():
-    pass
+    try:
+        name = input("Enter the employee's name: ")
+        job_title = input("Enter the employee's job title: ")
+        department_id = int(input("Enter the employee's department id: "))
+        
+        # Validate department_id
+        department = Department.query.get(department_id)
+        if not department:
+            print("Error creating employee: department_id must reference a department in the database")
+            return
+        
+        # Create and save the employee
+        employee = Employee(name=name, job_title=job_title, department_id=department_id)
+        employee.save()  # Replace with the ORM call to save the employee
+        print(f"Success: {employee}")
+    except ValueError as e:
+        print(f"Error creating employee: {e}")
+    except Exception as e:
+        print(f"Error creating employee: {e}")
 
 
 def update_employee():
-    pass
+    try:
+        employee_id = int(input("Enter the employee's id: "))
+        employee = Employee.query.get(employee_id)  # Replace with the ORM call to find employee by ID
+        
+        if not employee:
+            print(f"Employee {employee_id} not found")
+            return
+        
+        name = input("Enter the employee's new name: ")
+        job_title = input("Enter the employee's new job title: ")
+        department_id = int(input("Enter the employee's new department id: "))
+        
+        # Validate department_id
+        department = Department.query.get(department_id)
+        if not department:
+            print("Error updating employee: department_id must reference a department in the database")
+            return
+        
+        # Update and save the employee
+        employee.name = name
+        employee.job_title = job_title
+        employee.department_id = department_id
+        employee.save()  # Replace with the ORM call to update the employee
+        print(f"Success: {employee}")
+    except ValueError as e:
+        print(f"Error updating employee: {e}")
+    except Exception as e:
+        print(f"Error updating employee: {e}")
+
 
 
 def delete_employee():
-    pass
+    try:
+        employee_id = int(input("Enter the employee's id: "))
+        employee = Employee.query.get(employee_id)  # Replace with the ORM call to find employee by ID
+        
+        if not employee:
+            print(f"Employee {employee_id} not found")
+            return
+        
+        # Delete the employee
+        employee.delete()  # Replace with the ORM call to delete the employee
+        print(f"Employee {employee_id} deleted")
+    except ValueError:
+        print("Invalid ID format")
+    except Exception as e:
+        print(f"Error deleting employee: {e}")
+
 
 
 def list_department_employees():
-    pass
+    try:
+        department_id = int(input("Enter the department's id: "))
+        department = Department.query.get(department_id)  # Replace with the ORM call to find department by ID
+        
+        if not department:
+            print(f"Department {department_id} not found")
+            return
+        
+        employees = department.employees()  # Replace with the ORM call to get employees in the department
+        for employee in employees:
+            print(employee)
+    except ValueError:
+        print("Invalid ID format")
+    except Exception as e:
+        print(f"Error retrieving department employees: {e}")
